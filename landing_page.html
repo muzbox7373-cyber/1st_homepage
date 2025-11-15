@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eryte</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* 2. 랜딩페이지 전체적으로 시각적 스타일 강화 */
+        body { 
+            background-color: #f0f4f8; 
+            color: #334155; 
+            font-family: 'Noto Sans KR', sans-serif;
+            overflow-x: hidden; /* 가로 스크롤 방지 */
+            background-image: linear-gradient(to bottom, #e0f2fe, #f0f4f8);
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 1200px; 
+            width: 95%; /* 너비 조정하여 여백 확보 */ 
+            margin: 0 auto; 
+            padding: 15px; 
+            box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
+        }
+        
+        /* 1. 헤더 높이 더 줄임 & 스타일 강화 */
+        header { 
+            padding: 15px 0; 
+            text-align: center; 
+            background: linear-gradient(135deg, #0ea5e9, #0284c7); 
+            color: white; 
+            border-radius: 16px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15); 
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+            pointer-events: none;
+        }
+        h1 { 
+            font-size: min(2.2rem, 5vw); 
+            font-weight: 800; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3); 
+            margin: 5px 0; 
+        }
+        .subtitle { 
+            font-size: clamp(0.9rem, 2.2vw, 1rem); 
+            opacity: 0.9; 
+            margin: 5px 0; 
+        }
+        
+        /* 사이드바와 메인 콘텐츠 레이아웃 */
+.content-layout { 
+    display: flex !important; 
+    flex-direction: row !important; 
+    gap: 30px !important; 
+    margin-bottom: 40px !important; 
+}
+
+.sidebar { 
+    flex: 0 0 300px !important; /* flex-grow: 0, flex-shrink: 0, flex-basis: 300px */
+    width: 300px !important;
+    min-width: 300px !important;
+    order: 2 !important; /* 오른쪽에 배치 */
+    background-color: #f8fafc !important;
+    border-radius: 16px !important;
+    box-sizing: border-box !important;
+}
+
+.main-content { 
+    flex: 1 !important; 
+    order: 1 !important; /* 왼쪽에 배치 */
+}
+
+/* 반응형 조정 - 화면이 좁아지면 세로로 변경 */
+@media (max-width: 992px) {
+    .content-layout { 
+        flex-direction: column !important; /* 세로 배치 */
+    }
+    
+    .sidebar { 
+        flex: none !important; /* flex 속성 제거 */
+        width: 100% !important; /* 전체 너비 사용 */
+        min-width: 0 !important; /* 최소 너비 제한 해제 */
+        order: -1 !important; /* 최상단에 배치 */
+    }
+    
+    .main-content {
+        order: 0 !important; /* 사이드바 다음에 배치 */
+    }
+}
+        
+
+        /* 섹션 스타일 향상 */
+        .section { 
+            background-color: white; 
+            border-radius: 16px; 
+            padding: 20px; /* 균일한 패딩 */
+            margin-bottom: 40px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .section:hover {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+            transform: translateY(-5px);
+        }
+        
+        .section-content {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .shortcut-container {
+           width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* 카테고리 타이틀 박스 & 가장자리 라운드 처리 - 시각적 스타일 강화 */
+        .category-box { 
+            width: 100%; /* 컨테이너 너비에 맞춤 */
+            padding: 15px; 
+            margin-bottom: 20px; 
+            text-align: center; 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            color: white; 
+            background: var(--category-color); 
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15); 
+            border-radius: 16px; 
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .category-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+            pointer-events: none;
+        }
+        
+        /* 3. 사이트 컨테이너 크기/위치를 섹션명 박스의 양끝 가장자리에 맞게 정렬 */
+        .button-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* 자동으로 열 수 조정 */
+            gap: 20px; 
+            width: 100%; 
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            max-width: 100%; /* 최대 너비 제한 */
+            overflow: hidden; /* 넘침 방지 */
+        }
+        
+
+        /* 모바일 대응을 위한 추가 미디어 쿼리 */
+        @media (max-width: 768px) {
+            .button-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* 더 작은 요소 너비 */
+                gap: 10px; /* 간격 줄임 */
+            }
+    
+            .section {
+                padding: 15px; /* 패딩 축소 */
+            }
+    
+            .shortcut-button {
+                height: 80px; /* 높이 줄임 */
+            }
+    
+            .site-description {
+                height: 60px; /* 설명 높이 줄임 */
+                font-size: 12px; /* 글꼴 크기 줄임 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .button-grid {
+                grid-template-columns: 1fr; /* 모바일에서는 한 열로 */
+            }
+    
+            .container {
+                width: 100%; /* 전체 너비 사용 */
+                padding: 10px; /* 패딩 더 줄임 */
+            }
+        }
+
+        /* 4. 이모지가 박스 외곽으로 벗어나지 않도록 수정 & 전체적 디자인 개선 */
+        .shortcut-container { 
+            display: flex; 
+            flex-direction: column; 
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        .shortcut-container:hover {
+            transform: translateY(-8px);
+            z-index: 1;
+        }
+        
+        .shortcut-button { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 90px; 
+            background: linear-gradient(165deg, #f8fafc, #e2e8f0); 
+            border-radius: 12px 12px 0 0; 
+            padding: 12px; 
+            text-decoration: none; 
+            color: #334155; 
+            transition: all 0.3s ease; 
+            border: 1px solid #cbd5e1; 
+            border-bottom: 0; 
+            margin-bottom: 0; 
+            overflow: hidden; /* 이모지가 박스 밖으로 나가지 않게 */
+            position: relative;
+        }
+        .shortcut-button:hover { 
+            background: linear-gradient(165deg, #0ea5e9, #0284c7); 
+            color: white; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        .button-icon { 
+            font-size: 28px; 
+            margin-bottom: 8px; 
+            line-height: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            height: 36px; /* 이모지 높이 고정 */
+            width: 100%; /* 이모지 너비 최대화 */
+            overflow: hidden; /* 넘침 방지 */
+        }
+        .button-label { 
+            font-size: 16px; 
+            font-weight: 700; 
+            text-align: center; 
+            font-family: 'Noto Sans KR', sans-serif;
+            height: 22px; /* 높이 고정 */
+            width: 100%; 
+            overflow: hidden; 
+            text-overflow: ellipsis; /* 길면 ... 처리 */
+            white-space: nowrap; /* 줄바꿈 방지 */
+        }
+        
+        /* 사이트 설명 스타일 개선 */
+        .site-description { 
+            background: white; 
+            font-size: 14px; 
+            padding: 12px 15px; 
+            border-radius: 0 0 12px 12px; 
+            border: 1px solid #cbd5e1; 
+            border-top: 0; 
+            height: 72px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-start;
+            margin-top: 0; 
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+            color: #475569;
+            line-height: 1.5;
+        }
+        .shortcut-container:hover .site-description {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        /* 푸터 스타일 개선 */
+        footer { 
+            text-align: center; 
+            padding: 40px 0 20px; 
+            color: #64748b;
+            font-size: 14px;
+            background: linear-gradient(to top, rgba(241, 245, 249, 0.8), transparent);
+            margin-top: 20px;
+        }
+footer a {
+            color: #0284c7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        footer a:hover {
+            color: #0ea5e9;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>eryte</h1>
+            <p class="subtitle">ert</p>
+        </header>
+        
+        <div class="content-layout">
+            <div class="sidebar">
+                
+                <div class="section">
+                    <div class="section-content">
+                        <div class="category-box" style="--category-color: #ff6b6b">유용한 GPTS</div>
+                        <div class="button-grid">
+                            
+                            <div class="shortcut-container">
+                                <a href="https://muzbox.tistory.com/category/AI%2C%20%EB%AF%B8%EB%9E%98%EA%B8%B0%EC%88%A0" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">📝</div>
+                                    <h3 class="button-label">블로그_최신 AI 정보 공유</h3>
+                                </a>
+                                <p class="site-description">유용한 AI 사용법</p>
+                            </div>
+                            
+                            <div class="shortcut-container">
+                                <a href="https://www.threads.net/@gpt_patk" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">🔑</div>
+                                    <h3 class="button-label">쓰레드_최신 AI 정보 공유</h3>
+                                </a>
+                                <p class="site-description">최신 AI 뉴스</p>
+                            </div>
+                            
+                            <div class="shortcut-container">
+                                <a href="https://chatgpt.com/g/g-67d183780fdc819197fdac9038655bae-peurimieom-kiweodeu-saengseonggi" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">⭐</div>
+                                    <h3 class="button-label">프리미엄 키워드 생성기</h3>
+                                </a>
+                                <p class="site-description"> "돈 되는 키워드"를 찾아줍니다.</p>
+                            </div>
+                            
+                            <div class="shortcut-container">
+                                <a href="https://chatgpt.com/g/g-67bfb09513648191a2d188e90d708def-caesgpt-dibriseoci-peurompeuteu-akitegteu" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">💡</div>
+                                    <h3 class="button-label">딥리서치 프롬프트 아키텍트</h3>
+                                </a>
+                                <p class="site-description">모든 주제에 대한 심층 연구 프롬프트 생성</p>
+                            </div>
+                            
+                            <div class="shortcut-container">
+                                <a href="https://chatgpt.com/g/g-67b6b43aae588191b484b19eac452b7b-caesgpt-hwagjang-peurompeuteu-saengseonggi-curon-dibriseoci-coejeoghwa" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">💡</div>
+                                    <h3 class="button-label">챗GPT 확장 프롬프트 생성기</h3>
+                                </a>
+                                <p class="site-description">추론,딥리서치 최적화 프롬프트를 생성</p>
+                            </div>
+                            
+                            <div class="shortcut-container">
+                                <a href="https://chatgpt.com/g/g-67b084b533e481919bdeb38ebead5211-caesgpt-hwanggeumkiweodeuro-beulrogeu-jemog-saengseonghagi" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">🔑</div>
+                                    <h3 class="button-label">황금키워드로 블로그 제목 생성하기</h3>
+                                </a>
+                                <p class="site-description">키워드를 분석하여 SEO 최적화 블로그 제목을 제안</p>
+                            </div>
+                            
+                            <div class="shortcut-container">
+                                <a href="https://chatgpt.com/g/g-67a5778c01a081919a6deb7ea4615ace-caesgpt-gohwajil-imiji-saengseong-peurompeuteu-jeonmunga" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">📊</div>
+                                    <h3 class="button-label">고화질 이미지 생성 프롬프트 전문가</h3>
+                                </a>
+                                <p class="site-description">사실적인 이미지 생성 프롬프트 제안</p>
+                            </div>
+                            
+                            <div class="shortcut-container">
+                                <a href="https://chatgpt.com/g/g-678d84eed64c819190a55fb6178767fc-caesgpt-beulrogeu-jemog-saengseonggi" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">📌</div>
+                                    <h3 class="button-label">블로그 제목 생성기</h3>
+                                </a>
+                                <p class="site-description">키워드를 지속적으로 유지하기 위한 블로그 제목 제안</p>
+                            </div>
+                            
+                            <div class="shortcut-container">
+                                <a href="https://chatgpt.com/g/g-6786ffee60c48191a207fb7e1dd4a2e3-ingan-naemsae-ai-jagseonggeul-inganhwa" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">✨</div>
+                                    <h3 class="button-label">인간 냄새</h3>
+                                </a>
+                                <p class="site-description">AI로 생성한 모든 글을 사람이 쓴 글로 재구성</p>
+                            </div>
+                            
+                            <div class="shortcut-container">
+                                <a href="https://chatgpt.com/g/g-6781f8f306788191b076a2458c1b3d56-caesgptro-sumughwa-geuri" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">⭐</div>
+                                    <h3 class="button-label">수묵화 그리기</h3>
+                                </a>
+                                <p class="site-description">동양 수묵화 스타일의 이미지를 생성</p>
+                            </div>
+                            
+                            <div class="shortcut-container">
+                                <a href="https://chatgpt.com/g/g-LflS2MbmY-shonen-seinen-manhwa-mandeulgi" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">📅</div>
+                                    <h3 class="button-label">Shonen/Seinen 만화 만들기</h3>
+                                </a>
+                                <p class="site-description">일본식 Shonen/Seinen 만화 스타일의 이미지를 생성</p>
+                            </div>
+                            
+                            <div class="shortcut-container">
+                                <a href="https://chatgpt.com/g/g-sPwysm1aN-caesgpt-threads-hukeu-meseji-saengseong" class="shortcut-button" target="_blank">
+                                    <div class="button-icon">💡</div>
+                                    <h3 class="button-label">Threads 후크 메세지 생성</h3>
+                                </a>
+                                <p class="site-description">[키워드]에 대한 효율적인 후크 메세지 작성</p>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    <div class="main-content">
+        <!-- 3. 시트 순서대로 표시 (인덱스 1부터 시작) -->
+        
+        <div class="section">
+            <div class="section-content">
+                <div class="category-box" style="--category-color: #fd7e14">챗봇대화형 AI</div>
+                <div class="button-grid">
+                    
+                    <div class="shortcut-container">
+                        <a href="https://chat.openai.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💼</div>
+                            <h3 class="button-label">ChatGPT</h3>
+                        </a>
+                        <p class="site-description">OpenAI의 대화형 AI로, 자연어 이해와 생성에 강력한 성능을 발휘합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="http://gemini.google.com/" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔍</div>
+                            <h3 class="button-label">Google Gemini</h3>
+                        </a>
+                        <p class="site-description">구글 검색 데이터를 활용한 대화형 AI로, 실시간 정보 제공에 강점이 있습니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://grok.com/" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💡</div>
+                            <h3 class="button-label">Grok (xAI)</h3>
+                        </a>
+                        <p class="site-description">xAI의 AI로, 인간의 궁금증을 해결하는 데 초점을 맞춘 독특한 답변을 제공합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.anthropic.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📅</div>
+                            <h3 class="button-label">Claude</h3>
+                        </a>
+                        <p class="site-description">Anthropic의 안전하고 해석 가능한 AI로, 윤리적 대화에 중점을 둡니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.perplexity.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📊</div>
+                            <h3 class="button-label">Perplexity AI</h3>
+                        </a>
+                        <p class="site-description">질문에 대한 정확한 답변과 출처를 제공하는 AI 기반 검색 엔진입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.genspark.ai/" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📊</div>
+                            <h3 class="button-label">Genspark AI</h3>
+                        </a>
+                        <p class="site-description">AI 기반의 혁신적인 검색 엔진으로, 사용자의 검색 쿼리에 따라 실시간으로 맞춤형 '스파크 페이지(Sparkpage)'를 생성</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://character.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔑</div>
+                            <h3 class="button-label">Character.AI</h3>
+                        </a>
+                        <p class="site-description">사용자가 만든 가상 캐릭터와 대화할 수 있는 독창적인 AI 플랫폼입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://replika.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📊</div>
+                            <h3 class="button-label">Replika</h3>
+                        </a>
+                        <p class="site-description">감정적 지원과 개인화된 대화를 제공하는 AI 친구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://github.com/features/copilot" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💡</div>
+                            <h3 class="button-label">CoPilot (GitHub)</h3>
+                        </a>
+                        <p class="site-description">개발자를 위한 AI 코드 작성 도우미로, 실시간 코드 제안을 제공합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.jasper.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🧩</div>
+                            <h3 class="button-label">Jasper Chat</h3>
+                        </a>
+                        <p class="site-description">Jasper의 대화형 AI로, 마케팅 및 콘텐츠 관련 질문에 특화되어 있습니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://huggingface.co/chat" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📈</div>
+                            <h3 class="button-label">Hugging Chat</h3>
+                        </a>
+                        <p class="site-description">Hugging Face의 오픈소스 기반 대화 AI로, 커뮤니티 주도 모델을 활용합니다.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-content">
+                <div class="category-box" style="--category-color: #fab005">콘텐츠 생성</div>
+                <div class="button-grid">
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.copy.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💼</div>
+                            <h3 class="button-label">Copy.ai</h3>
+                        </a>
+                        <p class="site-description">마케팅 문구, 블로그 포스트 등 다양한 텍스트를 빠르게 생성합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://rytr.me" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔑</div>
+                            <h3 class="button-label">Rytr</h3>
+                        </a>
+                        <p class="site-description">SEO 최적화 콘텐츠와 40+ 템플릿을 제공하는 AI 글쓰기 도구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://writesonic.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📌</div>
+                            <h3 class="button-label">Writesonic</h3>
+                        </a>
+                        <p class="site-description">AI로 기사, 광고 문구, 제품 설명 등을 생성하며, 음성-텍스트 기능도 지원합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.frase.io" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📊</div>
+                            <h3 class="button-label">Frase</h3>
+                        </a>
+                        <p class="site-description">콘텐츠 작성과 SEO 분석을 결합한 AI 도구로, 경쟁 분석 기능이 돋보입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.articleforge.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🧩</div>
+                            <h3 class="button-label">Article Forge</h3>
+                        </a>
+                        <p class="site-description">키워드로 전체 기사를 자동 생성하는 AI 기반 콘텐츠 작성 도구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.sudowrite.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📅</div>
+                            <h3 class="button-label">Sudowrite</h3>
+                        </a>
+                        <p class="site-description">창작 글쓰기에 특화된 AI로, 소설가와 작가를 위한 아이디어 생성을 돕습니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://quillbot.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📰</div>
+                            <h3 class="button-label">QuillBot</h3>
+                        </a>
+                        <p class="site-description">AI로 문장을 재구성하고 문법을 교정하며, 글을 자연스럽게 다듬어줍니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.peppertype.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📚</div>
+                            <h3 class="button-label">Peppertype.ai</h3>
+                        </a>
+                        <p class="site-description">짧고 강렬한 콘텐츠(소셜 미디어 포스트 등)를 생성하는 데 특화된 AI입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.wordtune.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📝</div>
+                            <h3 class="button-label">Wordtune</h3>
+                        </a>
+                        <p class="site-description">문장을 재작성해 더 명확하고 매력적으로 만드는 AI 기반 편집 도구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.scalenut.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📰</div>
+                            <h3 class="button-label">Scalenut</h3>
+                        </a>
+                        <p class="site-description">콘텐츠 기획부터 작성까지, SEO 중심의 전체 워크플로우를 지원하는 AI입니다.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-content">
+                <div class="category-box" style="--category-color: #48bb78">이미지 생성편집</div>
+                <div class="button-grid">
+                    
+                    <div class="shortcut-container">
+                        <a href="https://firefly.adobe.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">⭐</div>
+                            <h3 class="button-label">Adobe Firefly</h3>
+                        </a>
+                        <p class="site-description">Adobe의 AI로, 텍스트 프롬프트로 고품질 이미지를 생성합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.midjourney.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">⭐</div>
+                            <h3 class="button-label">Midjourney</h3>
+                        </a>
+                        <p class="site-description">Discord 기반 AI로, 예술적이고 창의적인 이미지 생성에 강점이 있습니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://openai.com/dall-e" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💡</div>
+                            <h3 class="button-label">DALL·E (OpenAI)</h3>
+                        </a>
+                        <p class="site-description">텍스트 설명으로 독창적인 이미지를 생성하는 OpenAI의 AI 도구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.canva.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💡</div>
+                            <h3 class="button-label">Canva AI Generator</h3>
+                        </a>
+                        <p class="site-description">Canva 내 AI로, 디자인에 활용 가능한 이미지를 생성합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://runwayml.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📈</div>
+                            <h3 class="button-label">Runway ML</h3>
+                        </a>
+                        <p class="site-description">이미지와 비디오 편집을 위한 AI 도구로, 전문가 수준의 작업을 지원합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://stability.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">⭐</div>
+                            <h3 class="button-label">Stable Diffusion</h3>
+                        </a>
+                        <p class="site-description">오픈소스 AI로, 커뮤니티에서 커스터마이징하며 고품질 이미지를 생성합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.artbreeder.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📊</div>
+                            <h3 class="button-label">Artbreeder</h3>
+                        </a>
+                        <p class="site-description">AI로 이미지(특히 인물)를 합성하고 변형해 새로운 작품을 만드는 플랫폼입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.fotor.com/ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📝</div>
+                            <h3 class="button-label">Fotor AI</h3>
+                        </a>
+                        <p class="site-description">사진 편집과 AI 기반 이미지 생성을 결합한 사용자 친화적 도구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://nightcafe.studio" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💼</div>
+                            <h3 class="button-label">NightCafe</h3>
+                        </a>
+                        <p class="site-description">다양한 AI 알고리즘으로 예술 작품을 생성할 수 있는 플랫폼입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://deepart.io" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📊</div>
+                            <h3 class="button-label">DeepArt</h3>
+                        </a>
+                        <p class="site-description">사진을 명화 스타일로 변환하거나 새로운 이미지를 생성하는 AI 도구입니다.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-content">
+                <div class="category-box" style="--category-color: #0984e3">프레젠테이션</div>
+                <div class="button-grid">
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.beautiful.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📌</div>
+                            <h3 class="button-label">Beautiful.ai</h3>
+                        </a>
+                        <p class="site-description">AI로 슬라이드 디자인을 자동화하며, 깔끔한 프레젠테이션을 제공합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://gamma.app" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔍</div>
+                            <h3 class="button-label">Gamma</h3>
+                        </a>
+                        <p class="site-description">텍스트 입력으로 전체 프레젠테이션을 생성하는 AI 기반 도구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://tome.app" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📰</div>
+                            <h3 class="button-label">Tome</h3>
+                        </a>
+                        <p class="site-description">스토리텔링 중심의 AI 프레젠테이션 도구로, 시각적 요소를 자동 추가합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.slidesai.io" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📚</div>
+                            <h3 class="button-label">SlidesAI</h3>
+                        </a>
+                        <p class="site-description">Google Slides 확장 프로그램으로, AI가 슬라이드 콘텐츠를 생성합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://pitch.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">✨</div>
+                            <h3 class="button-label">Pitch</h3>
+                        </a>
+                        <p class="site-description">팀 협업과 AI 기반 템플릿으로 빠르게 프레젠테이션을 제작할 수 있습니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://prezi.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🌐</div>
+                            <h3 class="button-label">Prezi</h3>
+                        </a>
+                        <p class="site-description">AI로 동적이고 비선형 프레젠테이션을 설계할 수 있는 플랫폼입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.visme.co" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📌</div>
+                            <h3 class="button-label">Visme</h3>
+                        </a>
+                        <p class="site-description">AI로 인포그래픽과 프레젠테이션을 제작하며, 데이터 시각화에 강점이 있습니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.decktopus.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💡</div>
+                            <h3 class="button-label">Decktopus</h3>
+                        </a>
+                        <p class="site-description">AI로 몇 분 안에 전문적인 프레젠테이션을 생성하는 사용자 친화적 도구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.zoho.com/show" class="shortcut-button" target="_blank">
+                            <div class="button-icon">✨</div>
+                            <h3 class="button-label">Zoho Show</h3>
+                        </a>
+                        <p class="site-description">Zoho의 AI 지원 프레젠테이션 도구로, 팀 작업과 통합 기능이 돋보입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.canva.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📰</div>
+                            <h3 class="button-label">Canva Presentations</h3>
+                        </a>
+                        <p class="site-description">Canva의 AI로 디자인된 슬라이드를 제공하며, 쉽게 커스터마이징할 수 있습니다.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-content">
+                <div class="category-box" style="--category-color: #4c6ef5">웹사이트제작</div>
+                <div class="button-grid">
+                    
+                    <div class="shortcut-container">
+                        <a href="https://10web.io" class="shortcut-button" target="_blank">
+                            <div class="button-icon">⭐</div>
+                            <h3 class="button-label">10Web</h3>
+                        </a>
+                        <p class="site-description">AI로 워드프레스 웹사이트를 빠르게 생성하고 최적화합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.wix.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🌐</div>
+                            <h3 class="button-label">Wix ADI</h3>
+                        </a>
+                        <p class="site-description">Wix의 AI로, 사용자 입력을 기반으로 맞춤형 웹사이트를 설계합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://zyro.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📊</div>
+                            <h3 class="button-label">Zyro</h3>
+                        </a>
+                        <p class="site-description">AI로 웹사이트와 콘텐츠를 생성하며, 저렴한 가격으로 접근성이 좋습니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://durable.co" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔑</div>
+                            <h3 class="button-label">Durable</h3>
+                        </a>
+                        <p class="site-description">AI로 몇 초 안에 비즈니스 웹사이트를 생성하는 초고속 플랫폼입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://namify.tech" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔍</div>
+                            <h3 class="button-label">Namify</h3>
+                        </a>
+                        <p class="site-description">AI 기반 이름 생성기이며, 도메인과 로고를 함께 제공합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.hostinger.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📝</div>
+                            <h3 class="button-label">Hostinger AI Builder</h3>
+                        </a>
+                        <p class="site-description">호스팅과 AI 웹사이트 빌더를 결합해 간단히 사이트를 제작할 수 있습니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.framer.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💼</div>
+                            <h3 class="button-label">Framer AI</h3>
+                        </a>
+                        <p class="site-description">AI로 디자인 중심의 웹사이트를 생성하며, 개발자 친화적입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.jimdo.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📅</div>
+                            <h3 class="button-label">Jimdo</h3>
+                        </a>
+                        <p class="site-description">AI로 소규모 비즈니스 웹사이트를 빠르게 설계할 수 있는 도구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://teleporthq.io" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📌</div>
+                            <h3 class="button-label">TeleportHQ</h3>
+                        </a>
+                        <p class="site-description">AI와 협업으로 정적 웹사이트를 생성하며, 코드 내보내기 기능이 포함됩니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://bubble.io" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📝</div>
+                            <h3 class="button-label">Bubble</h3>
+                        </a>
+                        <p class="site-description">코딩 없이 AI 지원 웹 앱을 제작할 수 있는 노코드 플랫폼입니다.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-content">
+                <div class="category-box" style="--category-color: #9f7aea">SEO분석</div>
+                <div class="button-grid">
+                    
+                    <div class="shortcut-container">
+                        <a href="https://ahrefs.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💡</div>
+                            <h3 class="button-label">Ahrefs</h3>
+                        </a>
+                        <p class="site-description">AI로 SEO 분석과 메타 태그 생성을 지원하며, 키워드 연구에 강력합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.semrush.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📊</div>
+                            <h3 class="button-label">SEMrush</h3>
+                        </a>
+                        <p class="site-description">경쟁 분석과 AI 기반 SEO 전략을 제공하는 종합 마케팅 도구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://surferseo.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🌐</div>
+                            <h3 class="button-label">Surfer SEO</h3>
+                        </a>
+                        <p class="site-description">AI로 콘텐츠를 최적화하고 검색 순위를 높이는 데 초점을 둔 도구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://moz.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📈</div>
+                            <h3 class="button-label">Moz</h3>
+                        </a>
+                        <p class="site-description">AI로 백링크 분석과 키워드 순위를 추적하며, SEO 인사이트를 제공합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://yoast.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📅</div>
+                            <h3 class="button-label">Yoast SEO</h3>
+                        </a>
+                        <p class="site-description">워드프레스용 AI 기반 SEO 플러그인으로, 콘텐츠 최적화를 돕습니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.marketmuse.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📅</div>
+                            <h3 class="button-label">MarketMuse</h3>
+                        </a>
+                        <p class="site-description">AI로 콘텐츠 전략을 세우고, 주제별 권위도를 높이는 데 유용합니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.clearscope.io" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🌐</div>
+                            <h3 class="button-label">Clearscope</h3>
+                        </a>
+                        <p class="site-description">AI로 검색 의도를 분석하고, 콘텐츠의 품질을 개선하는 도구입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.klazify.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📈</div>
+                            <h3 class="button-label">Klazify</h3>
+                        </a>
+                        <p class="site-description">URL을 분석해 카테고리와 메타데이터를 추출하는 AI 기반 API입니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://rankmath.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💼</div>
+                            <h3 class="button-label">RankMath</h3>
+                        </a>
+                        <p class="site-description">AI로 실시간 SEO 제안을 제공하며, 워드프레스와 통합이 뛰어납니다.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.brightedge.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📝</div>
+                            <h3 class="button-label">BrightEdge</h3>
+                        </a>
+                        <p class="site-description">AI로 검색 트렌드를 예측하고, 대규모 SEO 캠페인을 관리할 수 있습니다.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-content">
+                <div class="category-box" style="--category-color: #ed64a6">음악생성편집</div>
+                <div class="button-grid">
+                    
+                    <div class="shortcut-container">
+                        <a href="https://suno.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🌐</div>
+                            <h3 class="button-label">Suno</h3>
+                        </a>
+                        <p class="site-description">텍스트 프롬프트로 고품질 노래를 생성하며, 장르와 가사를 커스터마이징 가능.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.aiva.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🌐</div>
+                            <h3 class="button-label">AIVA</h3>
+                        </a>
+                        <p class="site-description">다양한 장르의 음악을 작곡하며, 영화나 게임 사운드트랙 제작에 특화됨.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://soundraw.io" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📅</div>
+                            <h3 class="button-label">Soundraw</h3>
+                        </a>
+                        <p class="site-description">맞춤형 배경 음악을 생성하고 실시간 편집이 가능한 사용자 친화적 도구.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://boomy.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">✨</div>
+                            <h3 class="button-label">Boomy</h3>
+                        </a>
+                        <p class="site-description">몇 초 만에 음악을 생성하고 스트리밍 플랫폼에 배포할 수 있는 AI 플랫폼.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://mubert.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">⭐</div>
+                            <h3 class="button-label">Mubert</h3>
+                        </a>
+                        <p class="site-description">로열티 프리 음악을 생성하며, 콘텐츠 제작자向け로 분위기별 트랙 제공.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.loudly.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📝</div>
+                            <h3 class="button-label">Loudly</h3>
+                        </a>
+                        <p class="site-description">AI로 맞춤 음악을 생성하고 동영상에 맞춰 트랙을 조정할 수 있음.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://udio.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🧩</div>
+                            <h3 class="button-label">Udio</h3>
+                        </a>
+                        <p class="site-description">창의적인 음악 생성 도구로, 다양한 스타일과 악기 선택 가능.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://musicstar.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📈</div>
+                            <h3 class="button-label">MusicStar AI</h3>
+                        </a>
+                        <p class="site-description">35개 이상의 장르로 음악과 가사를 생성하며, 작사 기능도 포함.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.veed.io" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📌</div>
+                            <h3 class="button-label">VEED.IO Music</h3>
+                        </a>
+                        <p class="site-description">무료로 간단한 음악을 생성하며, 동영상 편집과 통합 가능.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.adobe.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">⭐</div>
+                            <h3 class="button-label">Adobe Audition AI</h3>
+                        </a>
+                        <p class="site-description">AI로 오디오 품질을 개선하고, 노이즈 제거 및 트랙 편집을 지원.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-content">
+                <div class="category-box" style="--category-color: #e84393">동영상 생성편집</div>
+                <div class="button-grid">
+                    
+                    <div class="shortcut-container">
+                        <a href="https://runwayml.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📈</div>
+                            <h3 class="button-label">Runway ML</h3>
+                        </a>
+                        <p class="site-description">AI로 동영상을 생성/편집하며, 모션 브러시와 같은 고급 기능 제공.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://klingai.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🌐</div>
+                            <h3 class="button-label">Kling AI</h3>
+                        </a>
+                        <p class="site-description">텍스트로 고화질 동영상을 생성하며, 뮤직비디오 제작에 유용.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://invideo.io" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📝</div>
+                            <h3 class="button-label">InVideo</h3>
+                        </a>
+                        <p class="site-description">스크립트를 동영상으로 변환하고, 자막과 음악을 자동 추가하는 AI 도구.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://pika.art" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔍</div>
+                            <h3 class="button-label">Pika.art</h3>
+                        </a>
+                        <p class="site-description">간단한 프롬프트로 창의적인 동영상을 생성하며, 애니메이션 스타일에 강점.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.synthesia.io" class="shortcut-button" target="_blank">
+                            <div class="button-icon">✨</div>
+                            <h3 class="button-label">Synthesia</h3>
+                        </a>
+                        <p class="site-description">AI 아바타로 동영상을 생성하며, 다국어 내레이션 지원.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.capcut.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🌐</div>
+                            <h3 class="button-label">CapCut AI</h3>
+                        </a>
+                        <p class="site-description">AI 기반 편집으로 자막, 효과, 음악 싱크를 자동화하는 올인원 플랫폼.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://vrew.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔍</div>
+                            <h3 class="button-label">Vrew</h3>
+                        </a>
+                        <p class="site-description">음성 인식으로 자막을 생성하고, 간단한 동영상 편집을 지원하는 한국産 도구.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://pictory.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📝</div>
+                            <h3 class="button-label">Pictory</h3>
+                        </a>
+                        <p class="site-description">텍스트를 동영상으로 변환하며, 마케팅 및 세일즈 영상에 특화됨.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://filmora.wondershare.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🧩</div>
+                            <h3 class="button-label">Filmora AI</h3>
+                        </a>
+                        <p class="site-description">AI로 동영상 보정, 음악 생성, 자막 추가 등 편집 기능을 제공.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.canva.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔑</div>
+                            <h3 class="button-label">Canva Video AI</h3>
+                        </a>
+                        <p class="site-description">텍스트 프롬프트로 동영상을 생성하고, 비트 싱크와 같은 AI 편집 기능 포함.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-content">
+                <div class="category-box" style="--category-color: #fd79a8">코딩</div>
+                <div class="button-grid">
+                    
+                    <div class="shortcut-container">
+                        <a href="https://github.com/features/copilot" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📟</div>
+                            <h3 class="button-label">GitHub Copilot</h3>
+                        </a>
+                        <p class="site-description">코드 제안과 자동 완성을 제공하는 AI로, 개발 생산성을 크게 향상.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://replit.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔌</div>
+                            <h3 class="button-label">Replit AI</h3>
+                        </a>
+                        <p class="site-description">실시간 코드 작성과 디버깅을 지원하며, 협업 코딩에 유용한 AI 도구.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://codeium.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🖱️</div>
+                            <h3 class="button-label">Codeium</h3>
+                        </a>
+                        <p class="site-description">다양한 언어를 지원하며, 무료로 코드 생성과 리팩토링을 돕는 AI.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.tabnine.com" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔋</div>
+                            <h3 class="button-label">Tabnine</h3>
+                        </a>
+                        <p class="site-description">머신 러닝으로 코드 완성을 제공하며, IDE와 통합 가능.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://cursor.sh" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🖱️</div>
+                            <h3 class="button-label">Cursor</h3>
+                        </a>
+                        <p class="site-description">AI 기반 코드 에디터로, 자연어로 코드를 수정하거나 생성 가능.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.deepcode.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">📀</div>
+                            <h3 class="button-label">DeepCode</h3>
+                        </a>
+                        <p class="site-description">AI로 코드 오류를 분석하고, 최적화 제안을 제공하는 도구.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://sourcegraph.com/cody" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💻</div>
+                            <h3 class="button-label">Sourcegraph Cody</h3>
+                        </a>
+                        <p class="site-description">코드 탐색과 이해를 돕는 AI로, 대규모 프로젝트에 적합.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://aws.amazon.com/codewhisperer" class="shortcut-button" target="_blank">
+                            <div class="button-icon">💻</div>
+                            <h3 class="button-label">Amazon CodeWhisperer</h3>
+                        </a>
+                        <p class="site-description">AWS 환경에 최적화된 AI로, 실시간 코드 추천과 보안 점검 기능 포함.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.jetbrains.com/ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🔌</div>
+                            <h3 class="button-label">JetBrains AI Assistant</h3>
+                        </a>
+                        <p class="site-description">JetBrains IDE에 통합된 AI로, 코드 작성과 리팩토링을 지원.</p>
+                    </div>
+                    
+                    <div class="shortcut-container">
+                        <a href="https://www.blackbox.ai" class="shortcut-button" target="_blank">
+                            <div class="button-icon">🖱️</div>
+                            <h3 class="button-label">Blackbox AI</h3>
+                        </a>
+                        <p class="site-description">질문에 맞춰 코드를 생성하고, 빠른 프로토타이핑에 유용한 AI 도구.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+        
+        <footer>
+            <p>© 2025 웹 콜렉션 - 모든 필요한 사이트를 한곳에서 | 제작: <a href="https://muzbox.tistory.com" target="_blank">GPT_Park</a></p>
+        </footer>
+    </div>
+</body>
+</html>
